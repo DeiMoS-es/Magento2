@@ -1,0 +1,1 @@
+/var/www/html/vendor/magento/module-sales/view/adminhtml/web/js/grid/columns/multiselect.js
