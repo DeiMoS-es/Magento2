@@ -43,3 +43,36 @@ warden env up
 # Instalar Magento manualmente dentro del contenedor
 warden shell
 composer create-project --repository-url=https://repo.magento.com magento/project-community-edition .
+
+
+# 🧱 Crear nuevo proyecto Magento 2 con Warden (estructura por subcarpeta)
+
+# Crear carpeta del proyecto
+mkdir -p ~/sites/Magento2/trendcommerce
+cd ~/sites/Magento2/trendcommerce
+
+# Inicializar entorno Magento 2
+warden env-init magento2
+
+# (Opcional) Editar .env si el nombre tiene puntos
+nano .env
+# Asegúrate de tener:
+# WARDEN_ENV_TYPE=magento2
+# WARDEN_ENV_NAME=trendcommerce
+
+# Levantar entorno
+warden env up
+
+# Entrar al contenedor
+warden shell
+
+# Instalar Magento con Composer
+composer create-project --repository-url=https://repo.magento.com magento/project-community-edition .
+
+# ⚠️ Si el directorio no está vacío, instala en una subcarpeta y luego copia los archivos:
+mkdir /var/www/magento && cd /var/www/magento
+composer create-project --repository-url=https://repo.magento.com magento/project-community-edition .
+cp -R /var/www/magento/* /var/www/html/
+cp -R /var/www/magento/.htaccess /var/www/html/
+cp -R /var/www/magento/.user.ini /var/www/html/
+rm -rf /var/www/magento
