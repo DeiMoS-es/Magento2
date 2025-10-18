@@ -1,4 +1,9 @@
 #!/bin/bash
+if ! command -v warden &> /dev/null; then
+  echo "❌ Warden no está instalado o no está en el PATH."
+  exit 1
+fi
+
 
 # 🚀 Magento 2 + Warden Setup Script
 # Autor: Nagib
@@ -53,7 +58,7 @@ bin/magento setup:install \
   --session-save-redis-host=redis \
   --session-save-redis-port=6379 \
   --session-save-redis-db=2 \
-  --session-save-redis-max-concurrency=20 \s
+  --session-save-redis-max-concurrency=20 \
   --cache-backend=redis \
   --cache-backend-redis-server=redis \
   --cache-backend-redis-db=0 \
@@ -93,6 +98,38 @@ bin/magento config:set --lock-env system/full_page_cache/ttl 604800
 bin/magento config:set --lock-env catalog/search/enable_eav_indexer 1
 bin/magento config:set --lock-env dev/static/sign 0
 
+# ✅ Verificación final de Magento 2 + Warden
+
+# Verifica que el frontend esté accesible
+# Debe mostrar la tienda sin errores
+xdg-open https://ecomerce.test/
+
+# Verifica que el backend esté accesible
+xdg-open https://ecomerce.test/backend
+
+# Si el frontend muestra un error 404:
+# 1. Verifica que pub/index.php existe
+ls -la /var/www/html/pub/index.php
+
+# 2. Asegúrate de que las URLs base están configuradas
+bin/magento config:set --lock-env web/unsecure/base_url "https://ecomerce.test/"
+bin/magento config:set --lock-env web/secure/base_url "https://ecomerce.test/"
+bin/magento config:set --lock-env web/secure/use_in_frontend 1
+bin/magento config:set --lock-env web/secure/use_in_adminhtml 1
+bin/magento config:set --lock-env web/secure/offloader_header X-Forwarded-Proto
+bin/magento config:set --lock-env web/seo/use_rewrites 1
+
+# 3. Genera contenido estático y limpia caché
+bin/magento setup:static-content:deploy -f
+bin/magento cache:flush
+
+# 4. Reinicia el entorno desde tu máquina host
+exit
+warden env down
+warden env up
+
+
+
 # 🧪 12. Activar modo desarrollador y limpiar caché
 bin/magento deploy:mode:set -s developer
 bin/magento cache:disable block_html full_page
@@ -103,3 +140,4 @@ EOF
 
 # ✅ Fin del script
 echo -e "\nMagento 2 instalado correctamente en https://ecomerce.test/backend"
+echo -e "\nFrontend disponible en https://ecomerce.test/"
