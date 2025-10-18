@@ -1,0 +1,49 @@
+# Magento core
+/app/etc/env.php
+/app/etc/config.php
+/var/
+/pub/media/
+/pub/static/
+/generated/
+/vendor/
+/node_modules/
+
+# Warden & Docker
+.env
+warden.log
+docker-compose.override.yml
+docker-compose.local.yml
+.docker/
+
+# Certificados y DNS
+*.crt.pem
+*.key.pem
+*.csr.pem
+
+# IDEs y editores
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs y caché
+*.log
+*.cache
+*.gz
+*.zip
+*.tar
+*.tgz
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Composer
+composer.lock
+auth.json
+
+# Otros
+*.bak
+*.tmp
+*.orig
+*.old
