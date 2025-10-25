@@ -85,3 +85,12 @@ php bin/magento cache:flush
 
 # 4. Comprobar estado del módulo (debería aparecer como enabled)
 php bin/magento module:status Vendor_Hello
+
+
+En Magento (y en cualquier framework moderno compatible con PSR-4), los nombres de carpetas y archivos dependen de para qué sirven:
+
+🔹 Carpetas que contienen clases PHP (código que se autoload-ea)
+→ Deben seguir exactamente el mismo nombre y mayúsculas/minúsculas que el namespace.
+
+🔹 Carpetas de configuración, vistas o recursos (XML, PHTML, CSS, JS)
+→ No contienen clases PHP, así que pueden (y deben) ir en minúsculas por convención.

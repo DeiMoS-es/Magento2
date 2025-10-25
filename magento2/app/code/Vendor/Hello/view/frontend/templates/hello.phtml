@@ -1,0 +1,8 @@
+<?php
+/** @var $block \Vendor\Hello\Block\Hello */
+?>
+<div class="vendor-hello">
+    <h1><?= $block->escapeHtml($block->getGreeting()) ?></h1>
+    <p><?= __('URL de prueba:') ?> <code><?= $block->escapeUrl($block->getHelloUrl()) ?></code></p>
+    <p><?= __('Hora del servidor:') ?> <strong><?= date('Y-m-d H:i:s') ?></strong></p>
+</div>

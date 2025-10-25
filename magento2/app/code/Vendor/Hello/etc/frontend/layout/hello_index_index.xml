@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!-- Layout para la ruta hello/index/index -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- Añadimos un bloque custom que usará template phtml -->
+        <referenceContainer name="content">
+            <block class="Vendor\Hello\Block\Hello" name="vendor_hello_block" template="Vendor_Hello::hello.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!-- Route para frontend: url base /hello -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="standard">
+        <route id="vendor_hello" frontName="hello">
+            <module name="Vendor_Hello" />
+        </route>
+    </router>
+</config>
