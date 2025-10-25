@@ -1,4 +1,5 @@
 <?php
+// Le indica a Magento que hay un módulo nuevo en esa ruta
 \Magento\Framework\Component\ComponentRegistrar::register(
     \Magento\Framework\Component\ComponentRegistrar::MODULE,
     'Vendor_Hello',
