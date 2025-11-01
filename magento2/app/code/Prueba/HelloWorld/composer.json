@@ -1,0 +1,26 @@
+{
+    "name": "prueba/module-hello-world",
+    "description": "Módulo de prueba Hello World",
+    "type": "magento2-module",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "version": "101.0.1",
+    "require": {
+        "php": "~8.2.0||~8.3.0||~8.4.0"
+       
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Prueba\\HelloWorld\\": ""
+        }
+    }
+}
+

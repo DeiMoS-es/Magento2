@@ -1,8 +1,23 @@
 <?php
 /** @var $block \Vendor\Hello\Block\Hello */
 ?>
-<div class="vendor-hello">
+<div class="vendor-hello" style="padding:1.2rem; border:1px solid #e5e5e5; border-radius:6px;">
++    <div style="color:#c00;font-weight:bold;margin-bottom:.6rem;">TEMPLATE: Vendor_Hello::hello.phtml (marker)</div>
     <h1><?= $block->escapeHtml($block->getGreeting()) ?></h1>
-    <p><?= __('URL de prueba:') ?> <code><?= $block->escapeUrl($block->getHelloUrl()) ?></code></p>
-    <p><?= __('Hora del servidor:') ?> <strong><?= date('Y-m-d H:i:s') ?></strong></p>
+    <h2>Esto es una prueba</h2>
+    <p>
+        <?= __('URL de prueba:') ?>
+        <a href="<?= $block->escapeUrl($block->getHelloUrl()) ?>">
+            <?= $block->escapeUrl($block->getHelloUrl()) ?>
+        </a>
+    </p>
+
+    <p>
+        <?= __('Hora del servidor:') ?> <strong><?= $block->escapeHtml((new \DateTime())->format('Y-m-d H:i:s')) ?></strong>
+    </p>
+
+    <p>
+        <?= __('Ejemplo de asset interno del módulo:') ?>
+        <code><?= $block->escapeUrl($block->getModuleAssetUrl('images/example.png')) ?></code>
+    </p>
 </div>

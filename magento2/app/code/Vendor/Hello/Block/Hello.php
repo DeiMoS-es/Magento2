@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Vendor\Hello\Block;
@@ -14,11 +15,11 @@ class Hello extends Template
     }
 
     /**
-     * Mensaje que devolvemos a la plantilla
+     * Mensaje que devolvemos a la plantilla (puede venir de config en el futuro)
      */
     public function getGreeting(): string
     {
-        return __('¡Hola Magento! Esto es un módulo de demostración.');
+        return (string)__('¡Hola Magento! Esto es un módulo de demostración.');
     }
 
     /**
@@ -27,5 +28,13 @@ class Hello extends Template
     public function getHelloUrl(): string
     {
         return $this->getUrl('hello');
+    }
+
+    /**
+     * Otro ejemplo: obtener la URL del skin / assets del módulo
+     */
+    public function getModuleAssetUrl(string $file): string
+    {
+        return $this->getViewFileUrl('Vendor_Hello::' . ltrim($file, '/'));
     }
 }

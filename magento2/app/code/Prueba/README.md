@@ -1,0 +1,2 @@
+Para buscar un ejemplo del registration.php, podemos ir a la carpeta del vendor de Magento y ver como registra un módulo.
+Dentro de la clase  ComponentRegistrar tenemos los distintos tipos de componentes que podemos registrar, en este caso un módulo (MODULE).
