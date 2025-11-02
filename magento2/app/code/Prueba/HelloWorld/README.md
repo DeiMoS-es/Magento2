@@ -151,3 +151,82 @@ Notas:
 
 - El controlador de ejemplo imprime `Hello World desde Index.php`. En producción deberías devolver un `ResultInterface` (por ejemplo `ResultPage`) en lugar de `echo`.
 - `composer.json` facilita la instalación local y autoload; no es obligatorio para un módulo en `app/code`, pero es buena práctica si el módulo se redistribuye.
+
+Estado actual (2 de noviembre de 2025)
+-----------------------------------
+He analizado los cambios recientes en el árbol del módulo y esto es lo que está presente ahora y su estado:
+
+- Controlador
+	- `app/code/Prueba/HelloWorld/Controller/Index/Index.php` existe y su implementación actual:
+
+		<?php
+		// declare(strict_types=1);
+		// namespace Prueba\HelloWorld\Controller\Index;
+		// class Index implements HttpGetActionInterface { public function __construct(private readonly PageFactory $pageFactory) {} public function execute() { return $this->pageFactory->create(); }}
+
+		- Estado: devuelve un `Result Page` mediante `PageFactory::create()` (correcto para un controlador frontend).
+
+- Layout
+	- `view/frontend/layout/prueba_index_index.xml` existe y es un XML válido.
+	- Contenido clave: modifica el título de página (`page.main.title`) y añade un `block` dentro de `content` con `template="Prueba_HelloWorld::index.phtml"`.
+	- También pasa un argumento `TwitchViewModel` con la clase `Prueba\HelloWorld\ViewModel\Twitch`.
+
+- ViewModel
+	- `app/code/Prueba/HelloWorld/ViewModel/Twitch.php` existe y expone `getChat(): string` devolviendo un mensaje de prueba.
+
+- Template
+	- `view/frontend/templates/index.phtml` existe y contiene:
+
+		<?php $viewModelTwitch = $block->getData('TwitchViewModel') ?>
+		<?= $viewModelTwitch->getChat() ?>
+		<h3><?= __('ESTO ES UNA PLANTILLA') ?></h3>
+
+	- Estado: el template usa el ViewModel pasado por el layout y muestra un marcador visible. Si al visitar la ruta no ves estos contenidos, es muy probable que el resultado esté siendo servido desde FPC/Varnish.
+
+Conclusión breve
+-----------------
+- El módulo `Prueba_HelloWorld` tiene la estructura mínima completa: registro, módulo, controlador, layout, ViewModel y plantilla.
+- El controlador devuelve correctamente un `Result Page`.
+- El layout y la plantilla están conectados y el template consume el ViewModel (flujos correctos).
+
+Pruebas recomendadas
+--------------------
+1) En el entorno correcto (Warden/container que tenga extensiones PHP necesarias):
+
+	 php bin/magento module:enable Prueba_HelloWorld
+	 php bin/magento setup:upgrade
+
+2) Limpiar y purgar cache (importante si hay Varnish/FPC):
+
+	 php bin/magento cache:clean
+	 php bin/magento cache:flush
+
+	 - Si tienes Varnish delante, purga su caché o prueba con `curl -H "Cache-Control: no-cache"`.
+
+3) Visitar la URL esperada (ajusta host):
+
+	 https://ecomerce.test/prueba/index/index
+
+	 - Debes ver el texto que devuelve `Twitch::getChat()` seguido del encabezado "ESTO ES UNA PLANTILLA".
+
+4) Si no ves los cambios en frontend:
+	 - Confirma cabeceras HTTP: `x-magento-cache-debug` y `x-varnish`.
+	 - Si `x-magento-cache-debug: HIT`, purga Varnish o prueba con `Cache-Control: no-cache`.
+
+Notas sobre DI y errores previos
+--------------------------------
+- Si en algún momento reaparece un error del tipo "Argument #1 must be of type Magento\\Framework\\View\\Result\\PageFactory, Magento\\Cms\\Model\\PageFactory given" eso indica una preference/override de DI que está inyectando la clase equivocada.
+- Diagnóstico rápido:
+
+	grep -R "PageFactory" -n app vendor
+
+	Revisar `app/etc/di.xml` y `etc/di.xml` de módulos que puedan definir una `<preference for="Magento\\Framework\\View\\Result\\PageFactory" .../>`.
+
+Siguientes pasos (opcional, puedo aplicarlos):
+------------------------------------------------
+1. Ejecutar una comprobación/limpieza de DI: eliminar `generated/` y ejecutar `php bin/magento setup:di:compile`.
+2. Si lo confirmas, puedo crear una prueba automatizada mínima o un `curl` post-procesado para validar la carga real de la plantilla y la ausencia de FPC en la respuesta.
+
+---
+Actualizo la tarea en la lista de trabajo: análisis completado; la actualización del README está en progreso.
+

@@ -11,9 +11,12 @@
            </action>
         </referenceBlock>
         <referenceContainer name="content">
-            <block class="Prueba\HelloWorld\Block\Index"
-                   name="prueba_helloworld.index"
-                   template="Prueba_HelloWorld::index.phtml"/>
+            <block name="prueba_helloworld.index"
+                   template="Prueba_HelloWorld::index.phtml">
+                   <arguments>
+                       <argument name="TwitchViewModel" xsi:type="object">Prueba\HelloWorld\ViewModel\Twitch</argument>
+                   </arguments>
+            </block>
         </referenceContainer>
     </body>
 </page>
